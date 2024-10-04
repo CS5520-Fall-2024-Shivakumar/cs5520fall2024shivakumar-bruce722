@@ -13,3 +13,21 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Ignore Gradle files
+.gradle/
+build/
+caches/
+wrapper/
+local.properties
+.idea/
+
+# Ignore build artifacts
+*.apk
+*.ap_
+*.dex
+*.so
+
+# Ignore other directories that may contain large files
+.cxx/
+.externalNativeBuild/
