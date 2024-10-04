@@ -12,4 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
+caches/
+wrapper/
 local.properties
