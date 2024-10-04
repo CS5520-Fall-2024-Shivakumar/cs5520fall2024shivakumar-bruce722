@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "edu.northeastern.myapplication"
+    namespace = "edu.northeastern.NUMAD24Fa_ChuanzhaoHuang"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "edu.northeastern.myapplication"
+        applicationId = "edu.northeastern.UMAD24Fa_ChuanzhaoHuang"
         minSdk = 27
         targetSdk = 34
         versionCode = 1
@@ -34,9 +34,12 @@ android {
 dependencies {
 
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation ("net.objecthunter:exp4j:0.4.8")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.activity:activity:1.8.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
 }

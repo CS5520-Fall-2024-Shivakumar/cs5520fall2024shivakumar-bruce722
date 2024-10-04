@@ -1,4 +1,4 @@
-package edu.northeastern.myapplication;
+package edu.northeastern.NUMAD24Fa_ChuanzhaoHuang;
 
 import org.junit.Test;
 
