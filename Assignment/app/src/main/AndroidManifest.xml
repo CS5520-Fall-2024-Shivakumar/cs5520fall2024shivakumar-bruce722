@@ -13,6 +13,9 @@
         android:theme="@style/Theme.NUMAD24Fa_ChuanzhaoHuang"
         tools:targetApi="31">
         <activity
+            android:name=".CalculatorActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
