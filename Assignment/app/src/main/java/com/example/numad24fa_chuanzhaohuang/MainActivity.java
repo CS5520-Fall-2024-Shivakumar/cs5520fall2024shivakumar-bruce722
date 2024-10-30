@@ -56,5 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent); // Start the CalculatorActivity
             }
         });
+
+        Button contactsCollectorButton = findViewById(R.id.btn_contacts_collector);
+        contactsCollectorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ContactsCollectorActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
