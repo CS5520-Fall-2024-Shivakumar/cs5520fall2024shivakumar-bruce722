@@ -1,6 +1,5 @@
 package com.example.numad24fa_chuanzhaohuang.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     @NonNull
     @Override
     public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the contact item layout
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_item, parent, false);
         return new ContactViewHolder(view);
     }
@@ -45,13 +43,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         holder.tvName.setText(contact.getName());
         holder.tvPhoneNumber.setText(contact.getPhoneNumber());
 
-        // Set up click listeners for actions
+        // Trigger onCall when the item (except delete button) is clicked
         holder.itemView.setOnClickListener(v -> listener.onCall(contact));
+
+        // Trigger onDelete when delete button is clicked
+        holder.tvDelete.setOnClickListener(v -> listener.onDelete(contact));
+
+        // Optional: Trigger onEdit if there's an edit action needed
         holder.itemView.setOnLongClickListener(v -> {
             listener.onEdit(contact);
             return true;
         });
-        holder.tvDelete.setOnClickListener(v -> listener.onDelete(contact));
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.example.numad24fa_chuanzhaohuang;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -12,12 +15,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.numad24fa_chuanzhaohuang.Adapters.ContactAdapter;
 import com.example.numad24fa_chuanzhaohuang.Models.Contact;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +86,7 @@ public class ContactsCollectorActivity extends AppCompatActivity {
                             Contact newContact = new Contact(name, phone);
                             contactList.add(newContact);
                             contactAdapter.notifyDataSetChanged();
-                            Toast.makeText(ContactsCollectorActivity.this, "Contact added", Toast.LENGTH_SHORT).show();
+                            showSnackbar(newContact);
                         } else {
                             Toast.makeText(ContactsCollectorActivity.this, "Both fields are required", Toast.LENGTH_SHORT).show();
                         }
@@ -92,12 +97,10 @@ public class ContactsCollectorActivity extends AppCompatActivity {
     }
 
     private void showEditContactDialog(final Contact contact) {
-        // Reuse dialog layout and update with contact details for editing
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_contact, null);
         final EditText editTextName = dialogView.findViewById(R.id.editTextName);
         final EditText editTextPhone = dialogView.findViewById(R.id.editTextPhone);
 
-        // Prepopulate fields with current contact info
         editTextName.setText(contact.getName());
         editTextPhone.setText(contact.getPhoneNumber());
 
@@ -134,12 +137,39 @@ public class ContactsCollectorActivity extends AppCompatActivity {
 
     @SuppressLint("QueryPermissionsNeeded")
     private void initiateCall(Contact contact) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
+        String phoneNumber = "tel:" + contact.getPhoneNumber().replaceAll("[^0-9]", "");
+        Uri uri = Uri.parse(phoneNumber);
+        Intent intent = new Intent(Intent.ACTION_DIAL, uri);
+
+        // Debugging: Log the URI and show a Toast with the exact phone number
+        Log.d("initiateCall", "Dialing URI: " + uri.toString());
+        Toast.makeText(this, "Dialing: " + phoneNumber, Toast.LENGTH_SHORT).show();
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Toast.makeText(this, "No app available to make calls", Toast.LENGTH_SHORT).show();
+            // Use ACTION_CALL as a fallback if ACTION_DIAL is not supported (for testing)
+            Intent callIntent = new Intent(Intent.ACTION_CALL, uri);
+
+            // Check if CALL_PHONE permission is granted
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+            } else {
+                startActivity(callIntent);
+            }
         }
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void showSnackbar(Contact contact) {
+        Snackbar.make(findViewById(R.id.recycler_view_contacts), "Contact added", Snackbar.LENGTH_LONG)
+                .setAction("UNDO", v -> {
+                    // Undo action to re-add the contact if deleted
+                    contactList.add(contact);
+                    contactAdapter.notifyDataSetChanged();
+                })
+                .show();
+    }
+
+
 }
